@@ -1,0 +1,75 @@
+openapi: 3.0.3
+info:
+  title: Revision API
+  version: 1.0.0
+  description: STD22081
+servers:
+  - url: https://book_api.org
+paths:
+  /books:
+    get:
+      summary: Gets all books
+      description: Return all books ordered by author name ascending
+      operationId: getBooks
+      parameters:
+        - name : bookName
+          in: query
+          description: Filters the returned books by author name
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: The returned books
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    put:
+      summary: Create or update of a list of books
+      operationId: updateBooks
+      requestBody:
+        content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                 $ref: '#/components/schemas/Book'
+      responses:
+        200:
+          description: The created or updated books
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+components:
+  schemas:
+    CreateBook:
+      type: object
+      properties:
+        bookName:
+          type: string
+        author:
+          type: string
+        releaseDate:
+          type: string
+          format: date
+        topic:
+          $ref: '#/components/schemas/Topic'
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        allOf:
+          $ref: '#/components/schemas/CreateBook'
+    Topic:
+      type: string
+      enum:
+        - ROMANCE
+        - COMEDY
+        - OTHER
